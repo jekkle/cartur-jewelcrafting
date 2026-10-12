@@ -4,4 +4,7 @@ obj
 Jewelcrafting.sln.DotSettings.user
 .idea
 .vs
-Directory.Build.targets
+Directory.Build.targetsbin/
+obj/
+*.user
+.vs/

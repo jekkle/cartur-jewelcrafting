@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Target Name="ILRepacker" AfterTargets="Build" Condition=" '$(Configuration)|$(Platform)' != 'API|AnyCPU' ">
-        <ItemGroup>
-            <InputAssemblies Include="$(TargetPath)"/>
-            <InputAssemblies Include="$(OutputPath)Libs\ServerSync.dll"/>
-            <InputAssemblies Include="$(OutputPath)Libs\SkillManager.dll"/>
-            <InputAssemblies Include="$(OutputPath)Libs\ItemManager.dll"/>
-            <InputAssemblies Include="$(OutputPath)Libs\ItemDataManager.dll"/>
-            <InputAssemblies Include="$(OutputPath)Libs\PieceManager.dll"/>
-            <InputAssemblies Include="$(OutputPath)Libs\AnimationSpeedManager.dll"/>
-            <InputAssemblies Include="$(OutputPath)Libs\LocalizationManager.dll"/>
-            <InputAssemblies Include="$(OutputPath)Libs\LocationManager.dll"/>
-            <InputAssemblies Include="$(OutputPath)Libs\StatManager.dll"/>
-            <InputAssemblies Include="$(OutputPath)Libs\GroupsAPI.dll"/>
-            <InputAssemblies Include="$(OutputPath)Libs\APIManager.dll"/>
-            <InputAssemblies Include="$(OutputPath)Libs\CreatureLevelControlAPI.dll"/>
-            <InputAssemblies Include="$(OutputPath)Libs\AzuExtendedPlayerInventoryAPI.dll"/>
-            <InputAssemblies Include="$(OutputPath)YamlDotNet.dll"/>
-        </ItemGroup>
-        <ILRepack Parallel="true" DebugInfo="true" Internalize="true" InputAssemblies="@(InputAssemblies)" OutputFile="$(TargetPath)" TargetKind="SameAsPrimaryAssembly" LibraryPath="$(OutputPath)"/>
-    </Target>
+  <!-- One DLL: the helper libraries and YamlDotNet are merged in and internalized, as upstream does,
+       so they cannot clash with other mods' copies of ServerSync, ItemManager and friends. -->
+  <Target Name="ILRepacker" AfterTargets="Build">
+    <ItemGroup>
+      <MergeInputs Include="$(TargetPath)" />
+      <MergeInputs Include="$(ProjectDir)Libs\*.dll" />
+      <MergeInputs Include="$(TargetDir)YamlDotNet.dll" />
+    </ItemGroup>
+    <ILRepack Parallel="true" Internalize="true" InputAssemblies="@(MergeInputs)" OutputFile="$(TargetDir)merged\$(AssemblyName).dll"
+              TargetKind="SameAsPrimaryAssembly" LibraryPath="$(TargetDir);$(Managed);$(R2MODMAN_PROFILE)\BepInEx\core" />
+    <MakeDir Directories="$(R2MODMAN_PROFILE)\BepInEx\plugins\CarturJewelcrafting" />
+    <Copy SourceFiles="$(TargetDir)merged\$(AssemblyName).dll" DestinationFolder="$(R2MODMAN_PROFILE)\BepInEx\plugins\CarturJewelcrafting" />
+  </Target>
 </Project>

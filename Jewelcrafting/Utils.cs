@@ -157,10 +157,15 @@ public static class Utils
 		return stream.ToArray();
 	}
 
+	private static readonly MethodInfo? loadImage = AccessTools.TypeByName("UnityEngine.ImageConversion")?.GetMethods(BindingFlags.Public | BindingFlags.Static)
+		.FirstOrDefault(m => m.Name == "LoadImage" && m.GetParameters().Length == 3 && m.GetParameters()[1].ParameterType == typeof(byte[]));
+
 	public static Texture2D loadTexture(string name)
 	{
 		Texture2D texture = new(0, 0);
-		texture.LoadImage(ReadEmbeddedFileBytes("icons." + name));
+		// Cartur: by reflection - a compile-time reference to ImageConversion needs netstandard 2.1,
+		// which net481 cannot resolve. Upstream linked a renamed old copy of the module instead.
+		loadImage?.Invoke(null, new object[] { texture, ReadEmbeddedFileBytes("icons." + name), false });
 		return texture;
 	}
 
