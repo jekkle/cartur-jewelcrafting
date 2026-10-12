@@ -8,3 +8,5 @@ Directory.Build.targetsbin/
 obj/
 *.user
 .vs/
+dist/
+package/plugins/

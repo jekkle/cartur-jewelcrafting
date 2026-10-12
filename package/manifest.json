@@ -1,0 +1,9 @@
+{
+  "name": "Carturs_Jewelcrafting",
+  "version_number": "2.1.0",
+  "website_url": "https://github.com/jekkle/cartur-jewelcrafting",
+  "description": "Smoothbrain's Jewelcrafting, carried on with their permission: gems, sockets and 80 gem effects, kept working on Valheim 1.0 with player-reported bugs fixed and new translations.",
+  "dependencies": [
+    "denikson-BepInExPack_Valheim-5.4.2333"
+  ]
+}
