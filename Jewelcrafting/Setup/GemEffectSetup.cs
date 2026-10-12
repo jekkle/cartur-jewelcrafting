@@ -70,6 +70,11 @@ public static class GemEffectSetup
 		swordFall = PrefabManager.RegisterPrefab(assets, "JC_Buff_FX_9");
 		gliding = assets.LoadAsset<SE_Stats>("JCGliding");
 		glidingDark = assets.LoadAsset<SE_Stats>("SE_DarkWings");
+		// Cartur fix (upstream issue #76): JCGliding ships with m_addMaxCarryWeight 75 in the asset
+		// bundle, so auto-pickup filled you 75 past your limit while gliding and you landed
+		// overweight. Gliding has no business changing carry weight.
+		((SE_Stats)gliding).m_addMaxCarryWeight = 0;
+		((SE_Stats)glidingDark).m_addMaxCarryWeight = 0;
 		glowingSpirit = assets.LoadAsset<SE_Stats>("SE_Crystal_Magelight");
 		glowingSpiritPrefab = PrefabManager.RegisterPrefab(assets, "JC_Crystal_Magelight");
 		glowingSpiritPrefab.AddComponent<GlowingSpirit.OrbDestroy>();

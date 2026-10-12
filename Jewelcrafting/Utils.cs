@@ -248,6 +248,12 @@ public static class Utils
 
 	public static string FormatShortNumber(float num) => num.ToString(num < 99.95 ? "G2" : "0");
 
+	// Cartur fix (upstream issue #118): an effect's numbers are not always a single value - an item
+	// whose gems roll from a power range shows "1 - 3" - so a synergy that rescales them must scale
+	// each number in the text, not float.Parse the whole of it (which threw on hover).
+	public static string ScaleNumbers(string text, float factor) => Regex.Replace(text, @"\d+(?:[.,]\d+)?",
+		m => float.TryParse(m.Value, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.CurrentCulture, out float value) ? FormatShortNumber(value * factor) : m.Value);
+
 	public static string LocalizeDescDetail(Player player, int tier, Effect effect, string[] numbers)
 	{
 		if (EffectDef.DescriptionOverrides.TryGetValue(effect, out EffectDef.OverrideDescription overrideDesc))

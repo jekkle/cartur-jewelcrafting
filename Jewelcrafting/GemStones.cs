@@ -276,7 +276,12 @@ public static class GemStones
         private static float originalCraftSize;
         private static bool displayGemChance;
 
-        private static int RevertUpgradingQuality() => AddSocketAddingTab.TabOpen() ? 1 : 0;
+        // Cartur fix (upstream issue #114): with the socketing tab open, UpdateRecipe reads the item's
+        // quality as 0, so its "quality + 1" is always 1 - the level socket costs are defined and
+        // charged at (AddSocketToItem consumes at quality 1). Upstream subtracted 1, which is only
+        // right for quality 1 items: a quality 3 item showed the quality 3 cost, and requirements
+        // without m_amountPerLevel come out as 0 there.
+        private static int SocketingQuality(int quality) => AddSocketAddingTab.TabOpen() ? 0 : quality;
 
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
@@ -286,8 +291,7 @@ public static class GemStones
                 yield return instruction;
                 if (instruction.opcode == OpCodes.Ldfld && instruction.OperandIs(qualityField))
                 {
-                    yield return new CodeInstruction(OpCodes.Call, AccessTools.DeclaredMethod(typeof(ChangeDisplay), nameof(RevertUpgradingQuality)));
-                    yield return new CodeInstruction(OpCodes.Sub);
+                    yield return new CodeInstruction(OpCodes.Call, AccessTools.DeclaredMethod(typeof(ChangeDisplay), nameof(SocketingQuality)));
                 }
             }
         }

@@ -22,7 +22,7 @@ public static class ResonatingEchoes
 		if (player.GetEffect(Effect.Resonatingechoes) > 0)
 		{
 			// chance
-			numbers[0] = Utils.FormatShortNumber(float.Parse(numbers[0]) * (1 + player.GetEffect(Effect.Resonatingechoes) / 100));
+			numbers[0] = Utils.ScaleNumbers(numbers[0], 1 + player.GetEffect(Effect.Resonatingechoes) / 100);
 		}
 		return null;
 	}

@@ -197,7 +197,22 @@ public static class DestructibleSetup
 			ZDO zdo = netView.GetZDO();
 			if (!zdo.IsOwner())
 			{
-				return;
+				// Cartur fix (upstream issue #129, measured on a dedicated server): spawners the server
+				// generated near the world centre stay owned by the server - its reference position is
+				// Vector3.zero, and ZDOMan.ReleaseNearbyZDOS never hands a ZDO to a client while it sits
+				// in its owner's active area. A dedicated server never instantiates the spawner, so
+				// CheckSpawn never ran for them: 0 of 80 server-owned spawners near spawn had a crystal.
+				// When the owner has no player character, the client running this spawner takes it.
+				long owner = zdo.GetOwner();
+				if (owner != 0 && Player.s_players.Any(p => p.GetZDOID().UserID == owner))
+				{
+					return;
+				}
+				netView.ClaimOwnership();
+				if (!zdo.IsOwner())
+				{
+					return;
+				}
 			}
 
 			ZDOID gemId = zdo.GetZDOID("spawn gem");

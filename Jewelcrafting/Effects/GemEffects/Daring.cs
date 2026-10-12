@@ -77,6 +77,13 @@ public static class Daring
 
 			__instance.m_nview.Register("Jewelcrafting Daring", sender =>
 			{
+				// Cartur fix (upstream issues #100, #116): "Daring Affects Bosses" only guarded the code
+				// that lowers a level again (CheckDaringPresent), not the two paths that raise it. With
+				// the option off, bosses still gained stars - and then never lost them.
+				if (__instance.IsBoss() && Jewelcrafting.daringAffectsBosses.Value == Jewelcrafting.Toggle.Off)
+				{
+					return;
+				}
 				if (!CreatureLevelControl.API.IsEnabled() && __instance.GetLevel() >= 3)
 				{
 					return;
@@ -120,7 +127,7 @@ public static class Daring
 		{
 			if (!player.IsDead())
 			{
-				List<Character> characters = Character.s_characters.Where(c => !c.IsPlayer() && !c.IsTamed() && Vector3.Distance(player.transform.position, c.transform.position) < SpawnSystem.m_spawnDistanceMax).ToList();
+				List<Character> characters = Character.s_characters.Where(c => !c.IsPlayer() && !c.IsTamed() && (!c.IsBoss() || Jewelcrafting.daringAffectsBosses.Value == Jewelcrafting.Toggle.On) && Vector3.Distance(player.transform.position, c.transform.position) < SpawnSystem.m_spawnDistanceMax).ToList();
 				foreach (Character character in characters)
 				{
 					if (CreatureLevelControl.API.IsLoaded() && (CreatureExtraEffect)character.m_nview.GetZDO().GetInt("CL&LC effect") == CreatureExtraEffect.Splitting)

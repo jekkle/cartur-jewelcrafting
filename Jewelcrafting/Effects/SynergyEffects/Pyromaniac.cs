@@ -22,7 +22,7 @@ public static class Pyromaniac
 		if (player.GetEffect(Effect.Pyromaniac) > 0)
 		{
 			// chance
-			numbers[1] = Utils.FormatShortNumber(float.Parse(numbers[1]) * (1 + player.GetEffect(Effect.Pyromaniac) / 100));
+			numbers[1] = Utils.ScaleNumbers(numbers[1], 1 + player.GetEffect(Effect.Pyromaniac) / 100);
 		}
 		return null;
 	}
