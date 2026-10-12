@@ -31,7 +31,10 @@ namespace Jewelcrafting;
 public partial class Jewelcrafting : BaseUnityPlugin
 {
 	public const string ModName = "Jewelcrafting";
-	private const string ModVersion = "2.0.11";
+	// Cartur: 2.1.0 so BepInEx keeps this build when a mod manager also installs Smoothbrain's
+	// Jewelcrafting (add-ons like EpicJewels depend on that package): with two plugins of one GUID,
+	// the chainloader loads only the highest version. Smoothbrain's last release was 2.0.11.
+	private const string ModVersion = "2.1.0";
 	private const string ModGUID = "org.bepinex.plugins.jewelcrafting";
 
 	public static readonly ConfigSync configSync = new(ModName) { DisplayName = ModName, CurrentVersion = ModVersion, MinimumRequiredVersion = ModVersion };
