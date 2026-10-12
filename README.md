@@ -1,3 +1,18 @@
+# Cartur's Jewelcrafting
+
+Smoothbrain's Jewelcrafting, carried on with their permission and kept working on Valheim 1.0.
+The mod, its code and its art are by **Smoothbrain** and **blaxxun-boop**
+([original repository](https://github.com/blaxxun-boop/Jewelcrafting),
+[original Thunderstore page](https://thunderstore.io/c/valheim/p/Smoothbrain/Jewelcrafting/)), with
+contributions from **Azumatt**. This fork's changes are listed in
+[package/CHANGELOG.md](package/CHANGELOG.md); what the mod does is in [package/README.md](package/README.md).
+
+Build: `dotnet build Jewelcrafting/CarturJewelcrafting.csproj -c Release`, or `tools/pack.ps1` for the release zips.
+
+The original API documentation follows.
+
+---
+
 # Jewelcrafting API
 
 Jewelcrafting has an API, which can be used to add your very own gems with your very own effects.
